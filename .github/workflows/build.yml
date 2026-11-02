@@ -57,7 +57,7 @@ jobs:
           echo buddy > "$md/app/src/main/assets/model/uuid"
           rm -rf model.zip mtmp
           if [ -f settings.gradle.kts ]; then d=.; else d=WaveBuddy; fi
-          (cd "$d" && gradle assembleDebug --no-daemon --stacktrace)
+          (cd "$d" && gradle assembleDebug --no-daemon 2>&1 | tee ../build.log; st=${PIPESTATUS[0]}; echo "=== ERRORS ==="; grep -E "^e: |error:" ../build.log | head -80; echo "=== END ERRORS ==="; exit $st)
           cp "$d/app/build/outputs/apk/debug/app-debug.apk" out/WaveBuddy.apk
           ls -la out
 
